@@ -1,0 +1,25 @@
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+
+image: atlassian/default-image:3
+
+pipelines:
+  default:
+    - parallel:
+        steps:
+          - step:
+              name: 'Build and deploy to Github pages'
+              script: 
+                - rm -rf .git
+                - git init
+                - git config --global user.email "$GH_EMAIL"
+                - git config --global user.name "$GH_NAME"
+                - git remote add origin https://$GH_USERNAME:$GH_TOKEN@github.com/$GH_USERNAME/CICD-testing.git
+                - git checkout --orphan gh-pages
+                - git add . 
+                - git config --global user.email "bbpipeline@example.com"
+                - git config --global user.name "BB Pipeline"
+                - git commit -m "Deploy to Github Pages [ci skip]"
+                - git push -f origin gh-pages
